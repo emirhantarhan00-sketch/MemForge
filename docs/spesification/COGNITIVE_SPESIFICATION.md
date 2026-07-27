@@ -79,3 +79,26 @@ Evidance Properties:
 - Has temporal context
 - Has a source 
 - Influence belief revision 
+
+## 2.4 Belief
+A belief is Noema's current confidence state toward a spesific point in the time.
+Beliefs are dynamic cognitive states that evolves ad new evidance becomes available.
+A belief does not representa absolute truth. It represents the current evolution of a claim based on available evidance, hiistorical context,and consistency.
+
+Example:
+ 
+Claim at this point: 
+'The user is interested in embedded systems.'
+
+Evidance:
+' The user has repetedly discussed STM32, ESP32, and embedded projects.'
+
+Belief:
+' High likelşhood that the user has a sustained interest in embedded systems.
+
+Evidance Properties:
+- Associated with one or more claims
+- Can support or contradict a claim
+- Has temporal context
+- Has a source
+- Influence belief revision
