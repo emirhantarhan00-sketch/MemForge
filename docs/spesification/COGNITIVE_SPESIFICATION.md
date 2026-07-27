@@ -9,9 +9,35 @@ The fundamental principle of MemForge is
 > Memory is persistent. Belief is dynamic
 Memory represents a stable projection of a continiously evolving belief system
 ## 2. Core Consepts
-A claim is an interpreted statement generated from one of more observations.
-Claims represent possible meanings redived from observedinformation.They are not considered facts and must not directly become memories.
-A Claim requires supporting evidance before irt can influence the belief system.
+MemDorge seperates raw information, interpatetion,evaluation and persistent knowledge imto distinct cognitive layers.
+The cognitşve pipeline follows:
+Observation → Claim → Evidance → Belief → Memory
+Each layer represents a diffrent stage in Noema's cognitive process
+## 2.1 Observation
+An observation is the raw input received froma a conversation or external source.
+Observations represent  what was observed , not what is true
+An Observation contain the original information without interpretation, assumptions, or evaluation.
+Example :
+
+Input :
+' The user said ı am learning STM32.'
+
+Observation:
+'User mentioned STM32.'
+Observation properties:
+-Immutable
+-Timepstamped
+-Context-dependent
+-Does not contain interpretation
+- Is not a memory
+
+## 2.2 Claim
+
+
+
+A claim is an interpreted statement generated from one or more observations.
+Claims represent Noema's current interpretation of available observations. They are not considered permanent facts and must not directly become memories.
+A claim reflects the currentunderstanding of the system at a spesific point in the time. It can be strengthened, weakened,revised,or rejected as new evidance becomes available.
 Example:
 Observation :
 ' The user said : I am learning STM32.'
@@ -26,4 +52,3 @@ Claim Properties:
  -Not guaranteed to be permanently true
  - Requires evidance evaluation
  -Can evolve over time
- 
