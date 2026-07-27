@@ -94,7 +94,7 @@ Evidance:
 ' The user has repetedly discussed STM32, ESP32, and embedded projects.'
 
 Belief:
-' High likelşhood that the user has a sustained interest in embedded systems.
+' High likelyhood that the user has a sustained interest in embedded systems.
 
 Evidance Properties:
 - Associated with one or more claims
@@ -102,3 +102,42 @@ Evidance Properties:
 - Has temporal context
 - Has a source
 - Influence belief revision
+
+## 2.5 Memory
+Memory is the persistent representation of the information the Noema chooses to preserve after cognitive evaluation
+Memory is not a direct stogare of observations. It is the result of a selection process based on relevance ,consistency,and long-term value
+Noema does not remember everything it observes.It preserves information that contributes to a more accurate and useful understanding of the user
+
+Example:
+
+Observation:
+'The user mentioned drinking coffee today.'
+
+Belief:
+' Temporary daily activity.'
+
+Memory decision:
+Not preserved.
+---
+Observation:
+'The user is studying electrical engineering.'
+
+Claim at this point:
+'The user has a long-term interest in engineering.'
+
+Evidance:
+'Repeated discussions about engineering topics,projects, and career goals.'
+
+Belief:
+'High confidence.'
+
+Memory decision:
+Preserved as long-term user context.
+
+Memory properties:
+
+- Derived from evaluated beliefs.
+- Long-term oriented
+- Selectively preserved
+- Can be updated or removed
+- Represents meaningful context
