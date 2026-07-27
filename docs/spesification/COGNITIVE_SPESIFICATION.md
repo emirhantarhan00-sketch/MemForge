@@ -52,3 +52,30 @@ Claim Properties:
  -Not guaranteed to be permanently true
  - Requires evidance evaluation
  -Can evolve over time
+ ## 2.3 Evidance
+ Evidance is information that supports, weakens or contradictsa claim.
+ Evidance does not represent raw input. Instead, it represents the relationship between available information and a  spesific claim.
+ Evidance allows Noema to evaluate the reliability, evoluation,and consistancy of claims over time.
+ 
+ Example:
+
+ Observation:
+ 
+' The user said : I am learning STM32.'
+ 
+ Claim at this point:
+ 'This user is interested in embedded systems.'  
+ 
+ Supporting Evidance:
+ 'This user is has ciscussed STM32 ,ESP32,Arduino,and embadded projects multiple times.' 
+
+Contradicting Evidance:
+'This user states that embadded systems are no longer a field of interest.'
+
+Evidance Properties:
+
+-Assosiated with one or more claims
+- Can support or contradigt a claim
+-Has temporal context
+-Has a source 
+-Influence belief revision 
