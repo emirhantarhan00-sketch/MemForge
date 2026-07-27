@@ -76,6 +76,6 @@ Evidance Properties:
 
 -Assosiated with one or more claims
 - Can support or contradigt a claim
--Has temporal context
--Has a source 
--Influence belief revision 
+- Has temporal context
+- Has a source 
+- Influence belief revision 
