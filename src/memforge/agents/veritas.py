@@ -12,15 +12,17 @@ class Veritas(EvaluationAgent):
 
     def metadata(self) -> AgentMetaData:
         return AgentMetaData (
-        codename="Veritas" ,
-        alias = "Reliable",
-        category="Evaluation",
-        domain="Reliability",
-        version="0.1.0",
-        author="MemForge",
-        description="Evaluates epistemic confidence of beliefs.",
-        priority=100,
-        tags=["belief", "confidence", "trust"],
+            identifier="veritas",
+            codename="Veritas" ,
+             alias = "Reliable",
+            category="Evaluation",
+            domain="Reliability",
+            version="0.1.0" ,         
+            author="MemForge",
+            description="Evaluates epistemic confidence of beliefs.",
+            priority=100,
+            tags=["belief", "confidence", "trust"],
+            enabled_by_default=True,
     )    
     def supports(self, belief:Belief) ->bool:
         return True
