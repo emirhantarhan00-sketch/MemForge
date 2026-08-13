@@ -1,5 +1,6 @@
 import pytest
 
+
 from memforge.agents.skepsis import Skepsis
 from memforge.models.belief import Belief
 
@@ -12,19 +13,18 @@ def skepsis_agent():
 @pytest.fixture
 def mock_belief():
 
-    belief = Belief()
-
-    belief.claim = (
-        "The Earth revolves around the Sun."
+    belief = Belief(
+        claim=(
+            "The Earth revolves around the Sun."
+        ),
+        evidences=[
+            object(),
+            object(),
+            object(),
+            object(),
+            object(),
+        ],
     )
-
-    belief.evidences = [
-        object(),
-        object(),
-        object(),
-        object(),
-        object(),
-    ]
 
     return belief
 
@@ -59,6 +59,10 @@ def test_skepsis_evaluate(
 
     result = skepsis_agent.evaluate(
         mock_belief,
+    )
+
+    assert (
+        result is not None
     )
 
     assert (

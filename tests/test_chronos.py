@@ -1,43 +1,115 @@
-from datetime import datetime, timedelta, timezone
+from datetime import (
+    datetime,
+    timedelta,
+    timezone,
+)
+
 from unittest.mock import MagicMock
-from agents.chronos import ChronosAgent
-from agora.vote import Vote
+
+from memforge.agents.chronos import ChronosAgent
+from memforge.agora.vote import Vote
+
 
 def test_chronos_evaluate_fresh_belief():
+
     agent = ChronosAgent()
-    now = datetime.now(timezone.utc)
+
+    now = datetime.now(
+        timezone.utc
+    )
 
     belief = MagicMock()
-    belief.created_at = now -timedelta(days=10)
 
-    result = agent.evaluate(belief, reference_time=now)
+    belief.created_at = (
+        now - timedelta(days=10)
+    )
 
-    assert result.vote == Vote.ACCEPT
-    assert result.score == 0.90
-    assert "Fresh information" in result.reason
+    result = agent.evaluate(
+        belief,
+        reference_time=now,
+    )
+
+    assert (
+        result.vote
+        == Vote.ACCEPT
+    )
+
+    assert (
+        result.score
+        == 0.90
+    )
+
+    assert (
+        "Fresh information"
+        in result.reason
+    )
+
 
 def test_chronos_evaluate_moderate_belief():
+
     agent = ChronosAgent()
-    now = datetime.now(timezone.utc)
+
+    now = datetime.now(
+        timezone.utc
+    )
 
     belief = MagicMock()
-    belief.created_at = now -timedelta(days=100)   
 
-    result = agent.evaluate(belief, reference_time=now)
+    belief.created_at = (
+        now - timedelta(days=100)
+    )
 
-    assert result.vote == Vote.NEUTRAL
-    assert result.score == 0.65
-    assert "Moderately fresh" in result.reason
+    result = agent.evaluate(
+        belief,
+        reference_time=now,
+    )
+
+    assert (
+        result.vote
+        == Vote.NEUTRAL
+    )
+
+    assert (
+        result.score
+        == 0.65
+    )
+
+    assert (
+        "Moderately fresh"
+        in result.reason
+    )
+
 
 def test_chronos_evaluate_stale_belief():
+
     agent = ChronosAgent()
-    now = datetime.now(timezone.utc)
 
-    belief = MagicMock
-    belief.created_at = now - timedelta(days=400)    
+    now = datetime.now(
+        timezone.utc
+    )
 
-    result = agent.evaluate(belief, reference_time=now)
+    belief = MagicMock()
 
-    assert result.vote == Vote.REJECT
-    assert result.score == 0.30
-    assert "Outdated/stale" in result.reason
+    belief.created_at = (
+        now - timedelta(days=400)
+    )
+
+    result = agent.evaluate(
+        belief,
+        reference_time=now,
+    )
+
+    assert (
+        result.vote
+        == Vote.REJECT
+    )
+
+    assert (
+        result.score
+        == 0.30
+    )
+
+    assert (
+        "Outdated/stale"
+        in result.reason
+    )
