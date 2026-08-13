@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGORA — MemForge Karar Sahnesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d13;
+    --bg-void: #050709;
+    --panel: #10141c;
+    --panel-line: #1e2531;
+    --bronze: #c9a227;
+    --bronze-dim: #6b5a1f;
+    --parchment: #e8e1d3;
+    --parchment-dim: #9a927e;
+    --noema: #6fa8c9;
+    --chronos: #e8a33d;
+    --mnemos: #7a9176;
+    --veritas: #e4d28a;
+    --skepsis: #c1483a;
+    --dim: #3a4250;
+  }
+
+  * { box-sizing: border-box; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: radial-gradient(ellipse at 50% 30%, #0d1119 0%, var(--bg-void) 75%);
+    color: var(--parchment);
+    font-family: 'JetBrains Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--panel-line);
+    padding-bottom: 16px;
+    margin-bottom: 8px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--bronze);
+    text-transform: uppercase;
+    margin: 0 0 4px;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.06em;
+    margin: 0;
+    color: var(--parchment);
+    text-shadow: 0 0 24px rgba(201,162,39,0.25);
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--parchment-dim);
+    text-align: right;
+    line-height: 1.6;
+    max-width: 260px;
+  }
+
+  /* --- SCENE --- */
+  .scene-frame {
+    position: relative;
+    margin-top: 18px;
+    border: 1px solid var(--panel-line);
+    background: linear-gradient(180deg, #0c1017 0%, #090c12 100%);
+  }
+
+  svg { display: block; width: 100%; height: auto; }
+
+  .ring-path { fill: none; stroke: var(--panel-line); stroke-width: 1; }
+
+  .spoke { stroke: var(--dim); stroke-width: 1; opacity: 0.5; }
+  .spoke.active {
+    stroke-width: 1.6;
+    opacity: 1;
+    animation: pulse-spoke 0.9s ease-out;
+  }
+  @keyframes pulse-spoke {
+    0% { stroke-dashoffset: 200; opacity: 0; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+
+  .node-circle {
+    fill: var(--panel);
+    stroke: var(--dim);
+    stroke-width: 1.4;
+    transition: all 0.4s ease;
+  }
+  .node-group.active .node-circle {
+    stroke-width: 2.2;
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+  .node-group.objecting .node-circle {
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translate(0,0); }
+    25% { transform: translate(-2px,0); }
+    75% { transform: translate(2px,0); }
+  }
+
+  .node-label {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    fill: var(--parchment-dim);
+    text-anchor: middle;
+    transition: fill 0.4s ease;
+  }
+  .node-group.active .node-label { fill: var(--parchment); }
+
+  .node-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    fill: var(--dim);
+    text-anchor: middle;
+    transition: fill 0.4s ease;
+  }
+  .node-group.active .node-sub { fill: currentColor; opacity: 0.9; }
+
+  .core-circle {
+    fill: var(--bg-void);
+    stroke: var(--bronze-dim);
+    stroke-width: 1.4;
+    transition: all 0.5s ease;
+  }
+  .core-circle.charging {
+    stroke: var(--bronze);
+    filter: drop-shadow(0 0 18px rgba(201,162,39,0.6));
+  }
+  .core-circle.formed {
+    stroke: var(--veritas);
+    filter: drop-shadow(0 0 26px rgba(228,210,138,0.85));
+  }
+  .core-circle.rejected {
+    stroke: var(--skepsis);
+    filter: drop-shadow(0 0 20px rgba(193,72,58,0.7));
+  }
+
+  .core-text {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    fill: var(--parchment-dim);
+    text-anchor: middle;
+  }
+  .core-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    fill: var(--bronze);
+    text-anchor: middle;
+    text-transform: uppercase;
+  }
+
+  .claim-banner {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    fill: var(--parchment);
+    text-anchor: middle;
+    opacity: 0;
+  }
+  .claim-banner.show {
+    animation: fade-in-out 3.2s ease forwards;
+  }
+  @keyframes fade-in-out {
+    0% { opacity: 0; transform: translateY(6px); }
+    12% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* --- CONTROLS --- */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--panel-line);
+    background: var(--panel);
+    flex-wrap: wrap;
+  }
+
+  button.primary {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--bronze);
+    border: 1px solid var(--bronze-dim);
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  button.primary:hover:not(:disabled) {
+    border-color: var(--bronze);
+    background: rgba(201,162,39,0.08);
+  }
+  button.primary:disabled { opacity: 0.35; cursor: default; }
+  button.primary:focus-visible {
+    outline: 2px solid var(--veritas);
+    outline-offset: 2px;
+  }
+
+  label.toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: var(--parchment-dim);
+    cursor: pointer;
+    user-select: none;
+  }
+  label.toggle input { accent-color: var(--bronze); }
+
+  .archive {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--parchment-dim);
+  }
+  .archive .count {
+    font-family: 'Cinzel', serif;
+    color: var(--veritas);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* --- LOG --- */
+  .log-panel {
+    border-top: 1px solid var(--panel-line);
+    background: #070a0f;
+    height: 190px;
+    overflow-y: auto;
+    padding: 12px 18px;
+    font-size: 11.5px;
+    line-height: 1.85;
+  }
+  .log-panel::-webkit-scrollbar { width: 6px; }
+  .log-panel::-webkit-scrollbar-thumb { background: var(--panel-line); }
+
+  .log-line { opacity: 0; animation: log-in 0.3s ease forwards; white-space: pre-wrap; }
+  @keyframes log-in { to { opacity: 1; } }
+  .log-tag { color: var(--dim); }
+  .log-line .t-noema { color: var(--noema); }
+  .log-line .t-chronos { color: var(--chronos); }
+  .log-line .t-mnemos { color: var(--mnemos); }
+  .log-line .t-veritas { color: var(--veritas); }
+  .log-line .t-skepsis { color: var(--skepsis); }
+  .log-line .t-agora { color: var(--bronze); }
+
+  /* --- PYRO WARNING LAYER --- */
+  .pyro-flame {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .pyro-flame.active {
+    opacity: 1;
+    animation: flicker 0.55s ease-in-out infinite alternate;
+  }
+  @keyframes flicker {
+    0% { opacity: 0.5; transform: scale(0.9) translateY(1.5px); }
+    100% { opacity: 1; transform: scale(1.15) translateY(-1.5px); }
+  }
+  .core-warning-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    fill: #ff7a4d;
+    text-anchor: middle;
+    opacity: 0;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+  }
+  .core-warning-text.show { opacity: 1; }
+  .core-circle.low-confidence {
+    stroke: #ff7a4d;
+    filter: drop-shadow(0 0 16px rgba(255,122,77,0.55));
+  }
+
+  /* --- RATIONALE PANEL --- */
+  .rationale-panel {
+    border-top: 1px solid var(--panel-line);
+    background: #0c0f16;
+    padding: 14px 18px 16px;
+  }
+  .rationale-title {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin: 0 0 10px;
+  }
+  .rationale-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 12px;
+  }
+  .rationale-list li {
+    padding: 2px 0 2px 12px;
+    border-left: 2px solid var(--panel-line);
+    color: var(--parchment-dim);
+    line-height: 1.5;
+  }
+  .rationale-list li.warning { border-left-color: #ff7a4d; color: #ff7a4d; }
+  .rationale-list li.verdict-accept { border-left-color: var(--veritas); color: var(--parchment); font-weight: 600; }
+  .rationale-list li.verdict-reject { border-left-color: var(--skepsis); color: var(--parchment); font-weight: 600; }
+  .rationale-empty { color: var(--dim); font-size: 11.5px; }
+
+  footer {
+    margin-top: 14px;
+    font-size: 10.5px;
+    color: var(--dim);
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="eyebrow">MemForge · Karar Sahnesi</p>
+      <h1>AGORA</h1>
+    </div>
+    <p class="subtitle">Gözlem → İddia → Kanıt → İnanç → Hafıza<br>zincirinin canlı temsili</p>
+  </header>
+
+  <div class="scene-frame">
+    <svg id="scene" viewBox="0 0 600 460" xmlns="http://www.w3.org/2000/svg">
+      <!-- outer ring -->
+      <circle class="ring-path" cx="300" cy="230" r="175"></circle>
+      <circle class="ring-path" cx="300" cy="230" r="70"></circle>
+
+      <!-- spokes (drawn dynamically via JS by id spoke-AGENTID) -->
+      <g id="spokes"></g>
+
+      <!-- claim banner -->
+      <text id="claimBanner" class="claim-banner" x="300" y="60">—</text>
+
+      <!-- agent nodes injected by JS -->
+      <g id="nodes"></g>
+
+      <!-- core -->
+      <g id="coreGroup">
+        <circle id="coreCircle" class="core-circle" cx="300" cy="230" r="46"></circle>
+        <text id="coreEyebrow" class="core-eyebrow" x="300" y="222">bekleniyor</text>
+        <text id="coreText" class="core-text" x="300" y="240">ÇEKİRDEK</text>
+        <g id="pyroFlames" class="pyro-flame">
+          <circle cx="266" cy="230" r="3.2" fill="#ff7a4d"></circle>
+          <circle cx="334" cy="230" r="3.2" fill="#ff7a4d"></circle>
+          <circle cx="300" cy="196" r="3.2" fill="#ff7a4d"></circle>
+          <circle cx="300" cy="264" r="3.2" fill="#ff7a4d"></circle>
+        </g>
+        <text id="coreWarning" class="core-warning-text" x="300" y="257">⚠ düşük güven</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="triggerBtn">Yeni Gözlem Başlat</button>
+    <label class="toggle">
+      <input type="checkbox" id="autoplay">
+      Otomatik döngü
+    </label>
+    <div class="archive">
+      <span>Mnemos arşivi</span>
+      <span class="count" id="archiveCount">0</span>
+    </div>
+  </div>
+
+  <div class="rationale-panel">
+    <p class="rationale-title">Gerekçe</p>
+    <ul class="rationale-list" id="rationaleList">
+      <li class="rationale-empty">Henüz bir karar üretilmedi.</li>
+    </ul>
+  </div>
+
+  <div class="log-panel" id="logPanel"></div>
+
+  <footer>prototip · gerçek MemForge event stream'i ile değiştirilecek mock veri kullanılıyor</footer>
+</div>
+
+<script>
+(function () {
+  const AGENTS = [
+    { id: 'noema',   label: 'Noema',   sub: 'gözlem',   color: 'var(--noema)',   angle: -90 },
+    { id: 'chronos', label: 'Chronos', sub: 'kısa vade', color: 'var(--chronos)', angle: -18 },
+    { id: 'veritas', label: 'Veritas', sub: 'güven',     color: 'var(--veritas)', angle: 54 },
+    { id: 'mnemos',  label: 'Mnemos',  sub: 'kalıcılık',  color: 'var(--mnemos)',  angle: 126 },
+    { id: 'skepsis', label: 'Skepsis', sub: 'itiraz',    color: 'var(--skepsis)', angle: 198 },
+  ];
+
+  const CLAIMS = [
+    'Ağ trafiğinde ani jitter artışı gözlemlendi',
+    '192.168.1.14 portunda anormal paket kaybı tespit edildi',
+    'CPU sıcaklığı eşik değerini aştı',
+    'Bilinmeyen bir cihaz ağa bağlandı',
+    'Bant genişliği kullanımı beklenmedik şekilde düştü',
+    'ESP32 sensör verisinde tutarsızlık var',
+    'Arka arkaya üç bağlantı zaman aşımına uğradı',
+  ];
+
+  const CX = 300, CY = 230, R = 175;
+
+  const svg = document.getElementById('scene');
+  const nodesG = document.getElementById('nodes');
+  const spokesG = document.getElementById('spokes');
+  const logPanel = document.getElementById('logPanel');
+  const claimBanner = document.getElementById('claimBanner');
+  const coreCircle = document.getElementById('coreCircle');
+  const coreEyebrow = document.getElementById('coreEyebrow');
+  const coreText = document.getElementById('coreText');
+  const triggerBtn = document.getElementById('triggerBtn');
+  const autoplayBox = document.getElementById('autoplay');
+  const archiveCountEl = document.getElementById('archiveCount');
+  const pyroFlames = document.getElementById('pyroFlames');
+  const coreWarning = document.getElementById('coreWarning');
+  const rationaleList = document.getElementById('rationaleList');
+
+  const CONFIDENCE_WARN_THRESHOLD = 0.7;
+  const PERSIST_THRESHOLD = 0.55;
+
+  let archiveCount = 0;
+  let running = false;
+
+  // build nodes + spokes
+  AGENTS.forEach(a => {
+    const rad = (a.angle * Math.PI) / 180;
+    const x = CX + R * Math.cos(rad);
+    const y = CY + R * Math.sin(rad);
+    a.x = x; a.y = y;
+
+    const spoke = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    spoke.setAttribute('x1', x); spoke.setAttribute('y1', y);
+    spoke.setAttribute('x2', CX); spoke.setAttribute('y2', CY);
+    spoke.setAttribute('class', 'spoke');
+    spoke.setAttribute('id', 'spoke-' + a.id);
+    spoke.setAttribute('stroke-dasharray', '220');
+    spokesG.appendChild(spoke);
+
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'node-group');
+    g.setAttribute('id', 'node-' + a.id);
+    g.style.color = a.color;
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('class', 'node-circle');
+    circle.setAttribute('cx', x); circle.setAttribute('cy', y); circle.setAttribute('r', 34);
+    circle.style.stroke = a.color;
+
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'node-label');
+    label.setAttribute('x', x); label.setAttribute('y', y - 2);
+    label.textContent = a.label;
+
+    const sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    sub.setAttribute('class', 'node-sub');
+    sub.setAttribute('x', x); sub.setAttribute('y', y + 13);
+    sub.textContent = a.sub;
+
+    g.appendChild(circle); g.appendChild(label); g.appendChild(sub);
+    nodesG.appendChild(g);
+  });
+
+  function log(agentId, text) {
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    const tagClass = agentId ? 't-' + agentId : '';
+    const tag = agentId ? '[' + agentId.toUpperCase() + ']' : '[AGORA]';
+    line.innerHTML = '<span class="' + (tagClass || 't-agora') + '">' + tag + '</span> ' + text;
+    logPanel.appendChild(line);
+    logPanel.scrollTop = logPanel.scrollHeight;
+  }
+
+  function activateSpoke(id) {
+    const s = document.getElementById('spoke-' + id);
+    s.classList.remove('active'); void s.offsetWidth; s.classList.add('active');
+  }
+
+  function activateNode(id, objecting) {
+    const n = document.getElementById('node-' + id);
+    n.classList.add('active');
+    if (objecting) { n.classList.add('objecting'); setTimeout(() => n.classList.remove('objecting'), 400); }
+  }
+
+  function resetNodes() {
+    AGENTS.forEach(a => {
+      document.getElementById('node-' + a.id).classList.remove('active');
+      document.getElementById('spoke-' + a.id).classList.remove('active');
+    });
+  }
+
+  function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+  function renderRationale(items) {
+    rationaleList.innerHTML = '';
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item.text;
+      if (item.type && item.type !== 'info') li.classList.add(item.type);
+      rationaleList.appendChild(li);
+    });
+  }
+
+  async function runCycle() {
+    if (running) return;
+    running = true;
+    triggerBtn.disabled = true;
+    resetNodes();
+    coreCircle.classList.remove('charging', 'formed', 'rejected', 'low-confidence');
+    coreEyebrow.textContent = 'bekleniyor';
+    coreText.textContent = 'ÇEKİRDEK';
+    pyroFlames.classList.remove('active');
+    coreWarning.classList.remove('show');
+    renderRationale([{ text: 'Değerlendirme sürüyor…', type: 'info' }]);
+
+    const claim = CLAIMS[Math.floor(Math.random() * CLAIMS.length)];
+    claimBanner.textContent = '"' + claim + '"';
+    claimBanner.classList.remove('show'); void claimBanner.offsetWidth; claimBanner.classList.add('show');
+
+    log('noema', 'yeni gözlem yakalandı → iddia oluşturuluyor');
+    activateSpoke('noema'); activateNode('noema');
+    await wait(650);
+    log(null, 'claim Agora\'ya iletildi: "' + claim + '"');
+    await wait(500);
+
+    // Chronos
+    activateSpoke('chronos'); activateNode('chronos');
+    const chronosRelevant = Math.random() > 0.25;
+    log('chronos', chronosRelevant ? 'kısa vadeli bağlam ile eşleşti — izleniyor' : 'bağlam zayıf — düşük öncelik');
+    await wait(600);
+
+    // Veritas
+    activateSpoke('veritas'); activateNode('veritas');
+    const confidence = (0.35 + Math.random() * 0.6).toFixed(2);
+    const lowConfidence = parseFloat(confidence) < CONFIDENCE_WARN_THRESHOLD;
+    log('veritas', 'bayesian güven skoru hesaplandı → ' + confidence);
+    if (lowConfidence) {
+      pyroFlames.classList.add('active');
+      coreWarning.classList.add('show');
+      coreCircle.classList.add('low-confidence');
+      log('veritas', 'uyarı: güven skoru 0.70 eşiğinin altında');
+    }
+    await wait(600);
+
+    // Skepsis
+    const objects = Math.random() < 0.4;
+    activateSpoke('skepsis'); activateNode('skepsis', objects);
+    if (objects) {
+      log('skepsis', 'itiraz — kanıt bağımsızlığı yetersiz, tekrar değerlendirilmeli');
+    } else {
+      log('skepsis', 'itiraz yok — kanıt kalitesi kabul edilebilir');
+    }
+    await wait(700);
+
+    // Mnemos
+    activateSpoke('mnemos'); activateNode('mnemos');
+    const worthPersisting = !objects && parseFloat(confidence) > PERSIST_THRESHOLD;
+    log('mnemos', worthPersisting ? 'kalıcı hafızaya değer bulundu' : 'kalıcılık eşiği karşılanmadı');
+    await wait(600);
+
+    // gerekçeleri derle
+    const reasons = [
+      { text: 'Chronos: ' + (chronosRelevant ? 'kısa vadeli bağlamla eşleşti, izlemeye değer' : 'bağlam zayıf, düşük öncelikli'), type: 'info' },
+      { text: 'Veritas: güven skoru ' + confidence + (lowConfidence ? ' — 0.70 eşiğinin altında kaldı' : ' — kabul edilebilir aralıkta'), type: lowConfidence ? 'warning' : 'info' },
+      { text: 'Skepsis: ' + (objects ? 'itiraz etti — kanıt bağımsızlığı yetersiz bulundu' : 'itiraz etmedi — kanıt kalitesi yeterli'), type: objects ? 'warning' : 'info' },
+      { text: 'Mnemos: ' + (worthPersisting ? 'kalıcılık eşiği (' + PERSIST_THRESHOLD + ') aşıldı' : 'kalıcılık eşiği (' + PERSIST_THRESHOLD + ') karşılanmadı'), type: 'info' },
+    ];
+
+    // verdict
+    coreCircle.classList.add('charging');
+    coreEyebrow.textContent = 'oylanıyor';
+    coreText.textContent = 'ÇEKİRDEK';
+    await wait(700);
+
+    if (worthPersisting) {
+      coreCircle.classList.remove('charging');
+      coreCircle.classList.add('formed');
+      coreEyebrow.textContent = 'inanç oluştu';
+      coreText.textContent = 'BELIEF';
+      log(null, 'verdict: BELIEF onaylandı, Mnemos arşivine yazılıyor');
+      archiveCount++;
+      archiveCountEl.textContent = archiveCount;
+    } else {
+      coreCircle.classList.remove('charging');
+      coreCircle.classList.add('rejected');
+      coreEyebrow.textContent = 'reddedildi';
+      coreText.textContent = 'DISCARD';
+      log(null, 'verdict: REDDEDİLDİ — eşikler karşılanmadı');
+    }
+
+    await wait(1400);
+    running = false;
+    triggerBtn.disabled = false;
+
+    if (autoplayBox.checked) runCycle();
+  }
+
+  triggerBtn.addEventListener('click', runCycle);
+  log(null, 'sahne hazır — "Yeni Gözlem Başlat" ile döngüyü tetikle');
+})();
+</script>
+</body>
+</html>
