@@ -14,7 +14,7 @@ class Evidence:
 
     claim_id: str
     observation_id: str
-    evidance_type: EvidanceType
+    evidence_type: EvidenceType
 
     id: str = field(default_factory=lambda: str(uuid4()))
     timestamp: datetime = field(

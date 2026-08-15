@@ -37,10 +37,11 @@ class Mnemos(EvaluationAgent):
         novelty = self._calculate_novelty(belief)
         utility = self._calculate_utility(belief)
         persistence = self._calculate_persistence(belief)
-        reuse = self._calculate_reuse_prohability(belief)
+        reuse = self._calculate_reuse_probability(belief)
 
         memory_worthiness = self._calculate_memory_worthiness(
             novelty,
+            utility,
             persistence,
             reuse,
         )
@@ -75,7 +76,7 @@ class Mnemos(EvaluationAgent):
 
         return 0.75
 
-    def _calculate_persistance(
+    def _calculate_persistence(
             self,
             belief: Belief,
     ) -> float:
@@ -93,14 +94,14 @@ class Mnemos(EvaluationAgent):
         self,
         novelty: float,
         utility: float,
-        persistance: float,
+        persistence: float,
         reuse: float,
     ) -> float:
 
         return (
             novelty +
             utility + 
-            persistance +
+            persistence +
             reuse
         ) /4
 
@@ -119,14 +120,14 @@ class Mnemos(EvaluationAgent):
             self,
             novelty: float,
             utility: float,
-            persistance: float,
+            persistence: float,
             reuse: float,
             score: float,
     ) -> str:
         return(
             f"Novelty={novelty:.2f}, "
             f"Utility{utility:.2f}"
-            f"Persistence={persistance:.2f},"
+            f"Persistence={persistence:.2f},"
             f"Reuse={reuse:.2f}."
             f"Memory Worthiness={score:.2f}."
         )

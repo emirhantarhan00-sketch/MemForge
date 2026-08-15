@@ -1,0 +1,3 @@
+__pycache__/
+*.pyc  
+benchmarks/fever/shared_task_dec.jsonl
