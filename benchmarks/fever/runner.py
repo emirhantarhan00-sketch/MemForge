@@ -10,6 +10,8 @@ from memforge.agents.skepsis import Skepsis
 from memforge.agents.veritas import Veritas
 from memforge.agents.mnemos import Mnemos
 from memforge.agents.chronos import ChronosAgent
+from .results import summarize
+from.results import save_results
 
 
 def fever_to_belief(item: dict) -> Belief:
@@ -102,9 +104,11 @@ def run_fever(path: str, limit: int | None = None) -> None:
     print()
     print(f"Processed {total} FEVER examples.")
 
+    save_results(results)
+
 
 if __name__ == "__main__":
     run_fever(
         "benchmarks/fever/shared_task_dev.jsonl",
-        limit=10,
+        limit=1000,
     )

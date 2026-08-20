@@ -338,7 +338,7 @@ The Observation Layer must remain independent from belief formation.
       Noema's architecture is designed to support future extansion while preserving the core cognitive model.
       Future development may expand the system beyond its initial capabilities while maintaining the seperation between observation, interpretations, evaluation, and memory
 
-       ### 6.1 Explainable Cognition
+      ### 6.1 Explainable Cognition
        Future versions may introduce mechanisms that allow Noema to explain the reasoning behind cognitive decisions.
 
        Potential Capabilities:
@@ -349,7 +349,7 @@ The Observation Layer must remain independent from belief formation.
 
        ---
        
-       ### 6.2 Active Cognitive Interferance
+      ### 6.2 Active Cognitive Interferance
        Future versions may allow direct interaction with Noema as a cognitive engine.
 
        Possible Capabilities:
@@ -361,7 +361,7 @@ The Observation Layer must remain independent from belief formation.
 
        ---
 
-        ###  6.3 Advanced Belief Modeling
+       ###  6.3 Advanced Belief Modeling
         Future research may explore more sophisticated belief models.
 
         Possible Improvement:
@@ -373,7 +373,7 @@ The Observation Layer must remain independent from belief formation.
 
        ---
 
-        ### 6.4 Cognitive Graph Structures
+     ### 6.4 Cognitive Graph Structures
         Future versions may represent cognitive realtionships as interconnected graphs.
 
         Potential structures:
